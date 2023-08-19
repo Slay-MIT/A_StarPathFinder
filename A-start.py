@@ -16,6 +16,9 @@ PURPLE = (128, 0, 128)
 ORANGE = (255, 165 ,0)
 GREY = (128, 128, 128)
 TURQUOISE = (64, 224, 208)
+PINK_RED = (255, 0, 128)
+YELLOW = (247, 240, 27)
+LIGHT_PURPLE = (188, 116, 247)
 
 class Node:
     def __init__(self, row, col, width, total_rows):
@@ -31,7 +34,7 @@ class Node:
         return self.row, self.col
     
     def is_closed(self):
-        return self.color==RED
+        return self.color==PINK_RED
     
     def is_open(self):
         return self.color==GREEN
@@ -40,7 +43,7 @@ class Node:
         return self.color==BLACK
     
     def is_start(self):
-        return self.color==ORANGE
+        return self.color==LIGHT_PURPLE
     
     def is_end(self):
         return self.color==TURQUOISE
@@ -49,10 +52,10 @@ class Node:
         self.color=WHITE
     
     def make_start(self):
-        self.color = ORANGE
+        self.color = LIGHT_PURPLE
 
     def make_closed(self):
-        self.color = RED
+        self.color = PINK_RED
 
     def make_open(self):
         self.color = GREEN;
@@ -64,7 +67,7 @@ class Node:
         self.color = TURQUOISE
     
     def make_path(self):
-        self.color = PURPLE
+        self.color = YELLOW
     
     def draw(self, win):
         pygame.draw.rect(win, self.color, (self.x, self.y, self.width, self.width))
