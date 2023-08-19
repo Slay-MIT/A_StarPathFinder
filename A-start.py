@@ -194,8 +194,6 @@ def main(win, width):
             if event.type == pygame.QUIT :
                 running = False
             #Started so that once the algorithm has started the user is not able to change obstacles (only press the cross button) as it can mess things up
-            if started:
-                continue
             if pygame.mouse.get_pressed()[0]: #0 stands for LEFT mouse button
                 pos = pygame.mouse.get_pos()
                 row ,col = get_clicked_position(pos, ROWS, width)
@@ -218,7 +216,7 @@ def main(win, width):
                 elif node==end:
                     end=None
             if event.type==pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE and started:
+                if event.key == pygame.K_SPACE and start and end:
                     for row in grid:
                         for node in row:
                             node.update_neighbors(grid)
