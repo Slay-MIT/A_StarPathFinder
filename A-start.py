@@ -49,7 +49,7 @@ class Node:
         self.color=WHITE
     
     def make_start(self):
-        self.color=ORANGE
+        self.color = ORANGE
 
     def make_closed(self):
         self.color = RED
@@ -95,6 +95,12 @@ def h(p1, p2):
     x2, y2 = p2
     return abs(x1-x2)+abs(y1-y2)
 
+def reconstruct_path(came_from, current, draw):
+    while current in came_from:
+        current = came_from[current]
+        current.make_path()
+        draw()
+
 def algorithm(draw, grid, start, end):
     count = 0
     open_set = PriorityQueue()
@@ -114,7 +120,9 @@ def algorithm(draw, grid, start, end):
         open_set_hash.remove(current)
 
         if current == end: #when we reach the destination
-            #make path
+            reconstruct_path(came_from, end, draw)
+            end.make_end()
+            start.make_start()
             return True
         for neighbor in current.neighbors:
             temp_g_score = g_score[current] + 1 #we add 1 cuz we are going one node over ?
@@ -132,7 +140,7 @@ def algorithm(draw, grid, start, end):
         if current != start:
             current.make_closed()
     return False
-    
+
 
 
 #Making the grid to hold the nodes
@@ -183,7 +191,7 @@ def main(win, width):
     while running:
         draw(win, grid, ROWS, width)
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT :
                 running = False
             #Started so that once the algorithm has started the user is not able to change obstacles (only press the cross button) as it can mess things up
             if started:
@@ -210,14 +218,16 @@ def main(win, width):
                 elif node==end:
                     end=None
             if event.type==pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE and not started:
+                if event.key == pygame.K_SPACE and started:
                     for row in grid:
                         for node in row:
-                            node.update_neighbors()
+                            node.update_neighbors(grid)
                     algorithm(lambda: draw(win, grid, ROWS, width), grid , start, end)
     
-    
-    
+                if event.key==pygame.K_c: #To clear/rest the grid, press c
+                    start = None
+                    end = None
+                    grid = make_grid(ROWS, width)
     #To stop the program
     pygame.quit()
 
