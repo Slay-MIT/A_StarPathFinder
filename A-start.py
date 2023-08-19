@@ -105,18 +105,35 @@ def algorithm(draw, grid, start, end):
     f_score = {node: float("inf") for row in grid for node in row} #dictionary comprehension
     f_score[start] = h(start.get_pos(), end.get_pos())
 
-    open_set_hash = {start}
+    open_set_hash = {start} #A set to store elements so that duplicates are not stored
     while not open_set.empty():
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT: #To exit the while loop
                 pygame.quit()
-        current = open_set.get()[2]
+        current = open_set.get()[2] #to get the lowest value F-score; we do [2] to get just the node (look at the open_set parameters)
         open_set_hash.remove(current)
 
-        if current == end:
+        if current == end: #when we reach the destination
             #make path
             return True
+        for neighbor in current.neighbors:
+            temp_g_score = g_score[current] + 1 #we add 1 cuz we are going one node over ?
+
+            if temp_g_score < g_score[neighbor]:
+                came_from[neighbor] = current
+                g_score[neighbor] = temp_g_score
+                f_score[neighbor] = temp_g_score + h(neighbor.get_pos(), end.get_pos())
+                if neighbor not in open_set_hash:
+                    count+=1
+                    open_set.put((f_score[neighbor], count, neighbor))
+                    open_set_hash.add(neighbor)
+                    neighbor.make_open()
+        draw()
+        if current != start:
+            current.make_closed()
+    return False
     
+
 
 #Making the grid to hold the nodes
 def make_grid(rows, width):
